@@ -9,7 +9,7 @@
     <div class="card shadow-sm border-0" style="width: 22rem; border-radius: 1rem;">
  
         {{-- Header --}}
-        <div class="card-header bg-primary text-white text-center py-3" style="border-radius: 1rem 1rem 0 0;">
+        <div class="card-header text-black text-center py-3" style="border-radius: 1rem 1rem 0 0;">
             <h5 class="mb-0">Login POS</h5>
         </div>
  
@@ -54,12 +54,6 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
- 
-                <div class="mb-3 form-check">
-                    <input type="checkbox" name="remember" class="form-check-input" id="rememberMe">
-                    <label class="form-check-label small" for="rememberMe">Ingat saya</label>
-                </div>
- 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Masuk</button>
                 </div>

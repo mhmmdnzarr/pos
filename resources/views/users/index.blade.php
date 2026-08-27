@@ -6,7 +6,7 @@
 
 @include('layouts.navbar')
 
-<h1>Halaman Utama</h1>
+<h1 style="color: white">Halaman Utama</h1>
 <a href="{{ route('admin.users.create') }}" method="GET" class="btn btn-primary mb-3">Create</a>
 <form action="{{ route('admin.users') }}" method="GET" class="mb-3">
     <div class="input-group">
