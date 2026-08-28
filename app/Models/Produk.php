@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Produk extends Model
 {   
@@ -21,17 +23,18 @@ class Produk extends Model
         'stok',
     ];
 
-
-    public function jenis()
+    public function jenis(): BelongsTo
     {
         return $this->belongsTo(Jenis::class, 'jenis_id');
     }
-    public function user()
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function itemPenjualan()
+
+    public function itemPenjualan(): HasMany
     {
-        return $this->hasMany(itemPenjualan::class, 'produk_id');
+        return $this->hasMany(ItemPenjualan::class, 'produk_id');
     }
 }

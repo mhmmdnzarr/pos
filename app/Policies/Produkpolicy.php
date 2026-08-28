@@ -6,7 +6,7 @@ use App\Models\Produk;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class Produkpolicy
+class ProdukPolicy
 {
     /**
      * Determine whether the user can view any models.

@@ -47,6 +47,18 @@
     @enderror
 </div>
 
+<div class="mb-3">
+    <label for="jenis_id" class="form-label">Jenis Produk</label>
+    <select name="jenis_id" id="jenis_id" class="form-select" required>
+        <option value="">-- Pilih Jenis Produk --</option>
+        @foreach($jenis as $item)
+            <option value="{{ $item->id }}" {{ old('jenis_id') == $item->id ? 'selected' : '' }}>
+                {{ $item->nama_jenis }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 {{-- Harga Beli --}}
 <div class="mt-2">
     <label>Harga Beli</label><br>
