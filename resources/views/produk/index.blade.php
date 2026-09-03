@@ -15,13 +15,14 @@
     @endif
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4 mb-0">Halaman Produk</h2>
+        <h2 class="h3 fw-bold mb-1">Halaman Produk</h2>
         @can('create', App\Models\Produk::class)
             <a href="{{ route('produk.create') }}" class="btn btn-primary btn-sm">
                 + Tambah Produk
             </a>
         @endcan
     </div>
+    <hr style="color: white;">
 
     <form action="{{ route('produk.index') }}" method="GET" class="mb-3">
         <div class="row">

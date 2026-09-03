@@ -6,53 +6,98 @@
 
 @include('layouts.navbar')
 
-<h1 style="color: white">Halaman Utama</h1>
-<a href="{{ route('admin.users.create') }}" method="GET" class="btn btn-primary mb-3">Create</a>
-<form action="{{ route('admin.users') }}" method="GET" class="mb-3">
-    <div class="input-group">
-        <input 
-            type="text" 
-            name="search" 
-            value="{{ request('search') }}" 
-            class="form-control" 
-            placeholder="Search username or email"
-        >
-        <button class="btn btn-outline-secondary" type="submit">
-            Search
-        </button>
-    </div>
-</form>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Role</th>
-      <th scope="col">Aksi</th>
-    </tr>
-  </thead>
-    <tbody>
-        @foreach($users as $user)
-    <tr>
-      <td>{{ $users->firstItem() + $loop->index }}</td>
-      <td>{{ $user->name }}</td>
-      <td>{{ $user->email }}</td>
-      <td>{{ $user->role->name }}</td>
-      <td>
-        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-warning">
-            Edit Akun
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-1 mt-4">
+        <h1 class="h3 fw-bold mb-0">Halaman Utama</h1>
+        <a href="{{ route('admin.users.create') }}"
+           class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm px-3">
+            <i class="bi bi-plus-lg"></i> Create
         </a>
-        ||
-        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
-            @csrf
-            @method('DELETE')
-            <button class="btn btn-danger" onclick="return confirm('Yakin Hapus User Ini?')">Hapus</button>
-        </form>
-      </td>
-      @endforeach
-    </tr>
-  </tbody>
-</table>
+    </div>
+    <hr style="color: white;">
+
+    <form action="{{ route('admin.users') }}" method="GET" class="mb-3">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                class="form-control border-start-0"
+                placeholder="Search username or email"
+            >
+            <button class="btn btn-outline-secondary" type="submit">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="ps-3">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col" class="text-end pe-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($users as $user)
+                        <tr>
+                            <td class="ps-3 text-muted">{{ $users->firstItem() + $loop->index }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-primary-subtle text-primary fw-semibold d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;font-size:.85rem;">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </div>
+                                    <span class="fw-medium">{{ $user->name }}</span>
+                                </div>
+                            </td>
+                            <td class="text-muted">{{ $user->email }}</td>
+                            <td>
+                                <span class="badge rounded-pill {{ $user->role->name === 'admin' ? 'text-bg-danger' : 'text-bg-secondary' }}">
+                                    {{ ucfirst($user->role->name) }}
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="d-inline-flex align-items-center gap-2">
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil-square"></i> Edit Akun
+                                    </a>
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Yakin Hapus User Ini?')">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Tidak ada user ditemukan.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if($users->hasPages())
+        <div class="mt-3 d-flex justify-content-center">
+            {{ $users->links() }}
+        </div>
+    @endif
+</div>
 
 @endsection

@@ -137,7 +137,7 @@ public function store(Request $request)
             $itempenjualan->delete();
 
             $sale->update([
-                'total_pembayaran' => $sale->$itempenjualan()->sum('subtotal')
+                'total_pembayaran' => $sale->itempenjualan()->sum('subtotal')
             ]);
         });
 

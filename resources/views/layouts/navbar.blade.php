@@ -26,18 +26,15 @@
           <a class="nav-link px-3 {{ Request::is('penjualan') ? 'active' : '' }}" href="{{ route('penjualan.index') }}">Penjualan</a>
         </li>
       </ul>
-<!-- 
+
       <form action="{{ route('logout') }}" method="POST" class="d-flex mt-2 mt-lg-0">
         @csrf
         <button type="submit" class="btn btn-logout d-flex align-items-center gap-1">
           <i class="bi bi-box-arrow-right"></i> Logout
         </button>
-      </form> -->
+      </form>
       <form action="{{ route('logout') }}" method="POST">
     @csrf
-    <button type="submit" class="text-red-600 hover:text-red-800">
-        Logout
-    </button>
 </form>
     </div>
   </div>

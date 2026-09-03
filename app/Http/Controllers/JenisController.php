@@ -3,45 +3,81 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jenis;
+use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
 
 class JenisController extends Controller
 {
-    public function index()
+    public function index(SearchRequest $request)
     {
-        $jenis = Jenis::latest()->paginate(10);
+        $this->authorize('viewAny', Jenis::class);
+
+        $keyword = $request->input('search');
+
+        $jenis = Jenis::when($keyword, function ($query) use ($keyword) {
+                $query->where('nama_jenis', 'like', '%' . $keyword . '%');
+            })
+            ->withCount('produk')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('jenis.index', compact('jenis'));
     }
 
     public function create()
     {
-        return view('jenis.create');
+        $this->authorize('viewAny', Jenis::class);
+
+        // Inisialisasi model kosong untuk mode Create
+        $jenis = new Jenis();
+
+        return view('jenis.create', compact('jenis'));
     }
 
     public function store(Request $request)
     {
-        $request->validate(['nama_jenis' => 'required|string|max:255']);
-        Jenis::create($request->all());
+        $this->authorize('viewAny', Jenis::class);
+
+        $request->validate([
+            'nama_jenis' => 'required|string|max:255|unique:jenis,nama_jenis',
+        ]);
+
+        Jenis::create($request->only('nama_jenis'));
 
         return redirect()->route('jenis.index')->with('success', 'Jenis berhasil ditambahkan.');
     }
 
-    public function edit(Jenis $jeni)
+    public function edit(Jenis $jenis)
     {
-        return view('jenis.edit', ['jenis' => $jeni]);
+        $this->authorize('viewAny', Jenis::class);
+
+        return view('jenis.edit', compact('jenis'));
     }
 
-    public function update(Request $request, Jenis $jeni)
+    public function update(Request $request, Jenis $jenis)
     {
-        $request->validate(['nama_jenis' => 'required|string|max:255']);
-        $jeni->update($request->all());
+        $this->authorize('viewAny', Jenis::class);
 
-        return redirect()->route('jenis.index')->with('success', 'Jenis berhasil diperbarui.');
+        $request->validate([
+            'nama_jenis' => 'required|string|max:255|unique:jenis,nama_jenis,' . $jenis->id,
+        ]);
+
+        $jenis->update($request->only('nama_jenis'));
+
+        return redirect()->route('jenis.index')->with('success', 'Jenis berhasil diupdate.');
     }
 
-    public function destroy(Jenis $jeni)
+    public function destroy(Jenis $jenis)
     {
-        $jeni->delete();
+        $this->authorize('delete', $jenis);
+
+        if ($jenis->produk()->exists()) {
+            return back()->with('errors', 'Jenis tidak bisa dihapus karena masih dipakai produk.');
+        }
+
+        $jenis->delete();
+
         return redirect()->route('jenis.index')->with('success', 'Jenis berhasil dihapus.');
     }
 }

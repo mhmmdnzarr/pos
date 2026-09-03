@@ -23,8 +23,8 @@
             <h1 class="h3 fw-bold text-dark mb-1">Daftar Jenis</h1>
         </div>
         <div>
-          @can('create', 'App\Models\Jenis')
-            <a href="{{ route('jenis.create') }}" class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm px-3">
+            @can('create', App\Models\Jenis::class)
+            <a href="{{ route('jenis.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm px-3">
                 <i class="bi bi-plus-lg"></i>
                 <span>Tambah Jenis</span>
             </a>
@@ -59,7 +59,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-secondary">
                     <tr>
-                        <th scope="col" class="ps-4" style="width: 10%;">#</th>
+                        <th scope="col" class="ps-4" style="width: 10%;">No</th>
                         <th scope="col" style="width: 70%;">Nama Jenis</th>
                         <th scope="col" class="text-center pe-4" style="width: 20%;">Aksi</th>
                     </tr>

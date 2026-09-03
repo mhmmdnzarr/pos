@@ -13,13 +13,9 @@
     </div>
 @endif
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+<h1 class="h3 fw-bold mb-1">Halaman Penjualan</h1>
 
-<h1>Halaman Penjualan</h1>
+<hr style="color: white;">
 
 <a href="{{ route('penjualan.create') }}" class="btn btn-primary mb-3">Create</a>
 
