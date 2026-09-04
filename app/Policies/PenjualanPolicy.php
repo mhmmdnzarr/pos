@@ -7,18 +7,26 @@ use App\Models\User;
 
 class PenjualanPolicy
 {
-    /**
-     * Mengatur izin untuk tombol EDIT
-     */
+
+    public function view(User $user, Penjualan $penjualan): bool
+    {
+        // Admin boleh lihat semua transaksi
+        if ($user->role->name === 'admin') {
+            return true;
+        }
+
+        return $user->role->name === 'kasir'
+            && $penjualan->user_id === $user->id;
+    }
+
+    
     public function update(User $user, Penjualan $penjualan): bool
     {
         return $user->role->name === 'admin'
         && $penjualan->status === 'OPEN';
     }
 
-    /**
-     * Mengatur izin untuk tombol HAPUS
-     */
+ 
     public function delete(User $user, Penjualan $penjualan): bool
     {
         return $user->role->name === 'admin'

@@ -19,12 +19,12 @@ class LaporanPenjualanService
                 SUM(CASE WHEN metode_pembayaran != "CASH" THEN total_pembayaran ELSE 0 END) as total_non_tunai
             ')
             ->first();
-        
+
         return [
-            'total_transaksi' => $data->total->transaksi ?? 0,
-            'total_penjualan' => $data->total->penjualan ?? 0,
-            'total_cash' => $data->total->cash ?? 0,
-            'total_non_tunai' => $data->total->non_tunai ?? 0,
+            'total_transaksi' => $data->total_transaksi ?? 0,
+            'total_penjualan' => $data->total_penjualan ?? 0,
+            'total_cash' => $data->total_cash ?? 0,
+            'total_non_tunai' => $data->total_non_tunai ?? 0,
         ];
     }
 

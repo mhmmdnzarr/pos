@@ -10,10 +10,10 @@ use App\Http\Controllers\ItemPenjualanController;
 use App\Http\Controllers\JenisController;
 
 //Route yang bisa diakses ketika user belum login
-Route::middleware('guest')->group(function (){
+Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
-    Route::post('/auth',[AuthController::class, 'auth'])->name('auth');
- });
+    Route::post('/auth', [AuthController::class, 'auth'])->name('auth');
+});
 
 //Route yang bisa di akses ketika user sudah login
 Route::middleware('auth')->group(function () {
@@ -21,21 +21,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('role:admin')->name('admin.')->group(function () {
-        Route::get('/users',[UserController::class, 'index'])->name('users');
+        Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/edit{user}', [UserController::class, 'edit'])->name('users.edit');
-        Route::post('/users/update/{user}', [UserController::class,'update'])->name('users.update');
+        Route::post('/users/update/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
-        });
-        //produk
-        Route::middleware('role:admin,kasir')->group(function() {
-            Route::resource('/produk', ProdukController::class);
-            Route::resource('/penjualan', PenjualanController::class);
-            Route::resource('/itempenjualan', ItemPenjualanController::class);
-            // Route::resource('/jenis', JenisController::class);
-            Route::resource('jenis', JenisController::class)
+    });
+    //produk
+    Route::middleware('role:admin,kasir')->group(function () {
+        Route::resource('/produk', ProdukController::class);
+        Route::resource('/penjualan', PenjualanController::class);
+        Route::resource('/itempenjualan', ItemPenjualanController::class);
+        // Route::resource('/jenis', JenisController::class);
+        Route::resource('jenis', JenisController::class)
             ->parameters(['jenis' => 'jenis']);
+         Route::get('/penjualan/{id}/print', [PenjualanController::class, 'print'])->name('penjualan.print');
     });
 });

@@ -7,13 +7,17 @@
 @include('layouts.navbar')
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-1 mt-4">
-        <h1 class="h3 fw-bold mb-0">Halaman Utama</h1>
-        <a href="{{ route('admin.users.create') }}"
-           class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm px-3">
-            <i class="bi bi-plus-lg"></i> Create
-        </a>
-    </div>
+    <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h4 class="fw-bold text-dark mb-1">Tambah User</h4>
+                    <p class="text-muted small mb-0">Kelola pengguna sistem dan hak akses mereka.</p>
+                </div>
+                <div>
+                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary px-4 fw-medium">Tambah User</a>
+                </div>
+            </div>
+        </div>
     <hr style="color: white;">
 
     <form action="{{ route('admin.users') }}" method="GET" class="mb-3">

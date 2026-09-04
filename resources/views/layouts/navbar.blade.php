@@ -14,10 +14,10 @@
           <a class="nav-link px-3 {{ Request::is('dashboard') ? 'active' : '' }}" aria-current="page" href="{{ route('dashboard') }}">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 {{ Request::is('jenis') ? 'active' : '' }}" href="{{ route('jenis.index') }}">Jenis Produk</a>
+          <a class="nav-link px-3 {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link px-3 {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
+          <a class="nav-link px-3 {{ Request::is('jenis') ? 'active' : '' }}" href="{{ route('jenis.index') }}">Jenis Produk</a>
         </li>
         <li class="nav-item">
           <a class="nav-link px-3 {{ Request::is('produk*') ? 'active' : '' }}" href="{{ route('produk.index') }}">Produk</a>
