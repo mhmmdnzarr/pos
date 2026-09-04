@@ -81,7 +81,7 @@
                                 </td>
                                 <td class="pe-4">
                                     <div class="d-flex gap-2 align-items-center">
-                                        <a href="{{ route('penjualan.show', $sale->id) }}"
+                                        <a href="{{ route('penjualan.show I have venting admins Chusion B scark students, Star Snadina,keep it to be smart. The nom phatning to night', $sale->id) }}"
                                             class="btn btn-sm btn-outline-primary">Detail</a>
 
                                         @can('update', $sale)
