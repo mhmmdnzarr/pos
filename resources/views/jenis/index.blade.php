@@ -17,20 +17,18 @@
         </div>
     @endif
     
-    <!-- Header Page & Tombol Tambah -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
-        <div>
-            <h1 class="h3 fw-bold text-dark mb-1">Daftar Jenis</h1>
+  {{-- Header Page & Button Create --}}
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h4 class="fw-bold text-dark mb-1">Daftar Jenis</h4>
+                    <p class="text-muted small mb-0">Tambah Jenis Produk Untuk Menambahkan Produk.</p>
+                </div>
+                <div>
+                    <a href="{{ route('jenis.create') }}" class="btn btn-primary px-4 fw-medium">Tambah Jenis</a>
+                </div>
+            </div>
         </div>
-        <div>
-            @can('create', App\Models\Jenis::class)
-            <a href="{{ route('jenis.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm px-3">
-                <i class="bi bi-plus-lg"></i>
-                <span>Tambah Jenis</span>
-            </a>
-            @endcan
-        </div>
-    </div>
 
     <!-- Filter & Form Pencarian -->
     <div class="card border-0 shadow-sm mb-4 rounded-3">

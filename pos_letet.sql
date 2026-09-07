@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               8.0.30 - MySQL Community Server - GPL
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.8.0.6908
+-- HeidiSQL Version:             12.1.0.6537
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -69,16 +69,11 @@ CREATE TABLE IF NOT EXISTS `item_penjualan` (
   KEY `item_penjualan_produk_id_foreign` (`produk_id`),
   CONSTRAINT `item_penjualan_penjualan_id_foreign` FOREIGN KEY (`penjualan_id`) REFERENCES `penjualan` (`id`),
   CONSTRAINT `item_penjualan_produk_id_foreign` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.item_penjualan: ~6 rows (approximately)
+-- Dumping data for table pos_letet.item_penjualan: ~152 rows (approximately)
 INSERT INTO `item_penjualan` (`id`, `penjualan_id`, `produk_id`, `kuantitas`, `harga_satuan`, `subtotal`, `created_at`, `updated_at`) VALUES
-	(1, 1, 2, 1, 15000, 15000, '2026-09-04 03:36:49', '2026-09-04 03:36:49'),
-	(2, 1, 1, 1, 10000, 10000, '2026-09-04 03:36:53', '2026-09-04 03:36:53'),
-	(3, 1, 4, 1, 9000, 9000, '2026-09-04 03:36:55', '2026-09-04 03:36:55'),
-	(4, 1, 3, 1, 9501, 9501, '2026-09-04 03:36:57', '2026-09-04 03:36:57'),
-	(5, 2, 2, 1, 15000, 15000, '2026-09-04 03:37:12', '2026-09-04 03:37:12'),
-	(6, 2, 1, 1, 10000, 10000, '2026-09-04 03:37:14', '2026-09-04 03:37:14');
+	(1, 1, 2, 3, 5000, 15000, '2026-09-07 06:54:39', '2026-09-07 06:54:41');
 
 -- Dumping structure for table pos_letet.jenis
 CREATE TABLE IF NOT EXISTS `jenis` (
@@ -87,12 +82,11 @@ CREATE TABLE IF NOT EXISTS `jenis` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.jenis: ~2 rows (approximately)
+-- Dumping data for table pos_letet.jenis: ~4 rows (approximately)
 INSERT INTO `jenis` (`id`, `nama_jenis`, `created_at`, `updated_at`) VALUES
-	(1, 'Makanan', '2026-09-04 03:34:17', '2026-09-04 03:34:17'),
-	(2, 'Minuman', '2026-09-04 03:34:25', '2026-09-04 03:34:25');
+	(1, 'Minuman', '2026-09-07 06:47:40', '2026-09-07 06:47:40');
 
 -- Dumping structure for table pos_letet.jobs
 CREATE TABLE IF NOT EXISTS `jobs` (
@@ -134,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.migrations: ~1 rows (approximately)
+-- Dumping data for table pos_letet.migrations: ~0 rows (approximately)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '0001_01_01_000000_create_roles_table', 1),
 	(2, '0001_01_01_000000_create_users_table', 1),
@@ -167,12 +161,11 @@ CREATE TABLE IF NOT EXISTS `penjualan` (
   PRIMARY KEY (`id`),
   KEY `penjualan_user_id_foreign` (`user_id`),
   CONSTRAINT `penjualan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.penjualan: ~2 rows (approximately)
+-- Dumping data for table pos_letet.penjualan: ~50 rows (approximately)
 INSERT INTO `penjualan` (`id`, `user_id`, `total_pembayaran`, `metode_pembayaran`, `status`, `created_at`, `updated_at`) VALUES
-	(1, 1, 43501, 'QRIS', 'COMPLETED', '2026-09-04 03:36:45', '2026-09-04 03:37:03'),
-	(2, 1, 25000, 'CASH', 'COMPLETED', '2026-09-04 03:37:10', '2026-09-04 03:37:20');
+	(1, 1, 15000, 'CASH', 'COMPLETED', '2026-09-07 06:45:04', '2026-09-07 06:54:45');
 
 -- Dumping structure for table pos_letet.produk
 CREATE TABLE IF NOT EXISTS `produk` (
@@ -192,14 +185,11 @@ CREATE TABLE IF NOT EXISTS `produk` (
   KEY `produk_nama_index` (`nama`),
   CONSTRAINT `produk_jenis_id_foreign` FOREIGN KEY (`jenis_id`) REFERENCES `jenis` (`id`) ON DELETE CASCADE,
   CONSTRAINT `produk_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.produk: ~4 rows (approximately)
+-- Dumping data for table pos_letet.produk: ~100 rows (approximately)
 INSERT INTO `produk` (`id`, `jenis_id`, `user_id`, `foto`, `nama`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`) VALUES
-	(1, 1, 1, 'products/6TYvRHSODC8NA0nmUc4bt63rlZ6K7HfZgT3WHVPk.jpg', 'Crosiant', 8000, 10000, 9, '2026-09-04 03:35:02', '2026-09-04 03:37:14'),
-	(2, 2, 1, 'products/h971z8ImqpTg1svG6NeXf9f23ubAkgT2NawXcHyB.jpg', 'Americano', 10000, 15000, 6, '2026-09-04 03:35:29', '2026-09-04 03:37:12'),
-	(3, 1, 1, 'products/j45MvpdvpWY0mUaoULN4XZ52yOWqJHVBehlENw9D.jpg', 'Roti Tawar', 6500, 9501, 9, '2026-09-04 03:36:05', '2026-09-04 03:36:57'),
-	(4, 2, 1, 'products/7L1Sb9ZHJ9YiPz7o5zFeJba5yCs9FE27TIEBoTtl.png', 'Nescafe', 8230, 9000, 15, '2026-09-04 03:36:30', '2026-09-04 03:36:55');
+	(2, 1, 1, 'products/SneKqGfNCJyg5EFQko5ldoqs7bazad6I0gR4RMuB.jpg', 'Es Teh', 3000, 5000, 19, '2026-09-07 06:54:05', '2026-09-07 06:54:41');
 
 -- Dumping structure for table pos_letet.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -212,8 +202,8 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 -- Dumping data for table pos_letet.roles: ~2 rows (approximately)
 INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-	(1, 'admin', '2026-09-04 02:29:43', '2026-09-04 02:29:43'),
-	(2, 'kasir', '2026-09-04 02:29:43', '2026-09-04 02:29:43');
+	(1, 'admin', '2026-09-07 06:43:42', '2026-09-07 06:43:42'),
+	(2, 'kasir', '2026-09-07 06:43:42', '2026-09-07 06:43:42');
 
 -- Dumping structure for table pos_letet.sessions
 CREATE TABLE IF NOT EXISTS `sessions` (
@@ -228,9 +218,9 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   KEY `sessions_last_activity_index` (`last_activity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_letet.sessions: ~1 rows (approximately)
+-- Dumping data for table pos_letet.sessions: ~0 rows (approximately)
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('ij97or2hDQTBya1G7LunBHmVidlk6hRdanN63xAc', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTlUyOHkwZ0puOUZ3OTBMak0yUWdXYmhRWTdzVFdzWDd4Q05vUzJSMiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9wZW5qdWFsYW4iO3M6NToicm91dGUiO3M6MTU6InBlbmp1YWxhbi5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1788494602);
+	('At6N8F5ch639lM5VHwKBY0MEuoTkemKom3uoC41d', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiOVRDaHJiVnhRUEtYR3Z1VmlXekFLd001QnhVVEhNSlhiRWxKdXRpTCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMToiaHR0cDovL2xvY2FsaG9zdDo4MDAwL3Blbmp1YWxhbiI7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjMxOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvcGVuanVhbGFuIjtzOjU6InJvdXRlIjtzOjE1OiJwZW5qdWFsYW4uaW5kZXgiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1788764108);
 
 -- Dumping structure for table pos_letet.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -252,8 +242,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Dumping data for table pos_letet.users: ~2 rows (approximately)
 INSERT INTO `users` (`id`, `role_id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 1, 'Admin', 'admin@gmail.com', NULL, '$2y$12$6zKxYP4z.KnGXAkeG7JxQe7twQWfSJTGsjIR8U/WuAhOptgpwlAlS', NULL, '2026-09-04 02:29:44', '2026-09-04 02:29:44'),
-	(2, 2, 'Kasir', 'kasir@gmail.com', NULL, '$2y$12$.6X4yTR9fpUFapx/uQA3Zuz/462MKGAxayI0bT2SaJd.miDzBftsW', NULL, '2026-09-04 02:29:49', '2026-09-04 02:29:49');
+	(1, 1, 'Admin', 'admin@gmail.com', NULL, '$2y$12$1UZOJpqq6PBFCW0J1uDx/ealLxen2yoLMV.4PFlaRITakMEBShYUK', NULL, '2026-09-07 06:43:42', '2026-09-07 06:43:42'),
+	(2, 2, 'Kasir', 'kasir@gmail.com', NULL, '$2y$12$AGmancz4vxYFrI.tSWoSB.dGhxJWUCTfbl5EIL6ltfB/L9VslGNRm', NULL, '2026-09-07 06:43:44', '2026-09-07 06:43:44');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
