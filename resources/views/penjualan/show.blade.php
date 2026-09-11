@@ -51,6 +51,7 @@
                             </span>
                         @endif
                     </div>
+                    
                     <div class="mb-3">
                         <p class="text-muted small mb-1">Jenis</p>
                         <p class="fw-semibold mb-0">    
@@ -68,12 +69,30 @@
 
                     <hr class="text-muted opacity-25">
 
-                    <div>
+                    <div class="mb-2">
                         <p class="text-muted small mb-1">Total Pembayaran</p>
-                        <h3 class="fw-bold text-success mb-0">
+                        <h4 class="fw-bold text-dark mb-0">
                             Rp {{ number_format($penjualan->total_pembayaran, 0, ',', '.') }}
-                        </h3>
+                        </h4>
                     </div>
+
+                    {{-- DITAMBAHKAN: Hanya muncul jika pembayaran menggunakan CASH --}}
+                    @if($penjualan->metode_pembayaran === 'CASH')
+                    <div class="mb-2 pt-2 border-top">
+                        <p class="text-muted small mb-1">Bayar (Tunai)</p>
+                        <p class="fw-semibold text-primary mb-0">
+                            Rp {{ number_format($penjualan->cash_amount ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-muted small mb-1">Kembalian</p>
+                        <h5 class="fw-bold text-success mb-0">
+                            Rp {{ number_format($penjualan->kembalian ?? (($penjualan->cash_amount ?? 0) - $penjualan->total_pembayaran), 0, ',', '.') }}
+                        </h5>
+                    </div>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -125,11 +144,27 @@
                         </tbody>
                         <tfoot>
                             <tr class="table-light">
-                                <td colspan="5" class="text-end fw-bold ps-4">Total</td>
-                                <td class="text-end pe-4 fw-bold text-success">
+                                <td colspan="5" class="text-end fw-bold ps-4">Total Tagihan</td>
+                                <td class="text-end pe-4 fw-bold text-dark">
                                     Rp {{ number_format($penjualan->total_pembayaran, 0, ',', '.') }}
                                 </td>
                             </tr>
+
+                            {{-- DITAMBAHKAN: Baris tambahan untuk rincian Bayar dan Kembalian di tabel --}}
+                            @if($penjualan->metode_pembayaran === 'CASH')
+                            <tr class="table-light border-top-0">
+                                <td colspan="5" class="text-end text-muted small ps-4">Tunai Diterima</td>
+                                <td class="text-end pe-4 text-muted small">
+                                    Rp {{ number_format($penjualan->cash_amount ?? 0, 0, ',', '.') }}
+                                </td>
+                            </tr>
+                            <tr class="table-light border-top-0">
+                                <td colspan="5" class="text-end fw-bold text-success ps-4">Kembalian</td>
+                                <td class="text-end pe-4 fw-bold text-success">
+                                    Rp {{ number_format($penjualan->kembalian ?? (($penjualan->cash_amount ?? 0) - $penjualan->total_pembayaran), 0, ',', '.') }}
+                                </td>
+                            </tr>
+                            @endif
                         </tfoot>
                     </table>
                 </div>
@@ -138,6 +173,7 @@
                         <i class="bi bi-printer"></i>
                         <span>Cetak Struk</span>
                     </a>
+                </div>
             </div>
         </div>
 

@@ -125,14 +125,52 @@
                             <span class="fs-5 fw-bold">Rp {{ number_format($sale->total_pembayaran) }}</span>
                         </div>
 
-                        <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" onsubmit="return confirm('Yakin ingin checkout?')">
+                        {{-- FORM CHECKOUT DENGAN INTERAKSI CASH & QRIS --}}
+                        <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" onsubmit="return validatePayment()">
                             @csrf
                             @method('PUT')
-                            <select name="payment_method" class="form-select mb-2" required>
-                                <option value="">Pilih Pembayaran</option>
-                                <option value="CASH">Cash</option>
-                                <option value="QRIS">QRIS</option>
-                            </select>
+
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Metode Pembayaran</label>
+                                <select name="payment_method" id="payment_method" class="form-select" required onchange="togglePaymentFields()">
+                                    <option value="">-- Pilih Pembayaran --</option>
+                                    <option value="CASH">Cash</option>
+                                    <option value="QRIS">QRIS</option>
+                                </select>
+                            </div>
+
+                            {{-- 1. Field Nominal Bayar & Kembalian (Muncul hanya saat milih CASH) --}}
+                            <div id="cash-fields" class="d-none border rounded p-3 mb-3 bg-white shadow-sm">
+                                <div class="mb-2">
+                                    <label class="form-label small text-muted mb-1">Nominal Tunai (Rp)</label>
+                                    <input type="number" 
+                                           name="cash_amount" 
+                                           id="cash_amount" 
+                                           class="form-control" 
+                                           placeholder="Masukkan jumlah uang..."
+                                           min="{{ $sale->total_pembayaran }}"
+                                           oninput="calculateChange()">
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <span class="small text-muted">Kembalian:</span>
+                                    <span class="fw-bold text-success" id="change-text">Rp 0</span>
+                                </div>
+                            </div>
+
+                           {{-- 2. Container QRIS (Muncul hanya saat milih QRIS) --}}
+<div id="qris-fields" class="d-none border rounded p-3 mb-3 bg-white shadow-sm text-center">
+    <p class="small text-muted mb-2 fw-semibold">Scan QRIS untuk Pembayaran</p>
+    
+    {{-- Gambar QRIS Kamu --}}
+    <img src="{{ asset('images/qris.png') }}" 
+         alt="QRIS Pinalles Outdoor" 
+         class="img-fluid rounded border p-2 bg-white" 
+         style="max-width: 220px;">
+
+    <small class="d-block text-muted mt-2" style="font-size: 0.75rem;">
+        Pastikan pembeli sudah transfer sebelum menekan Checkout.
+    </small>
+</div>
 
                             <button type="submit" class="btn btn-success w-100 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                 Checkout
@@ -160,4 +198,71 @@
     </div>
 
 </div>
+
+{{-- JAVASCRIPT UNTUK LOGIKA CASH & QRIS --}}
+<script>
+    const totalPay = {{ $sale->total_pembayaran ?? 0 }};
+
+    function togglePaymentFields() {
+        const method = document.getElementById('payment_method').value;
+        const cashFields = document.getElementById('cash-fields');
+        const qrisFields = document.getElementById('qris-fields');
+        const cashInput = document.getElementById('cash_amount');
+
+        if (method === 'CASH') {
+            cashFields.classList.remove('d-none');
+            qrisFields.classList.add('d-none');
+            cashInput.setAttribute('required', 'required');
+            cashInput.focus();
+        } else if (method === 'QRIS') {
+            qrisFields.classList.remove('d-none');
+            cashFields.classList.add('d-none');
+            cashInput.removeAttribute('required');
+            cashInput.value = '';
+            resetChangeText();
+        } else {
+            cashFields.classList.add('d-none');
+            qrisFields.classList.add('d-none');
+            cashInput.removeAttribute('required');
+            cashInput.value = '';
+            resetChangeText();
+        }
+    }
+
+    function resetChangeText() {
+        document.getElementById('change-text').className = 'fw-bold text-success';
+        document.getElementById('change-text').innerText = 'Rp 0';
+    }
+
+    function calculateChange() {
+        const cashInput = document.getElementById('cash_amount').value;
+        const changeText = document.getElementById('change-text');
+        
+        const cash = parseFloat(cashInput) || 0;
+        const change = cash - totalPay;
+
+        if (cashInput === '') {
+            resetChangeText();
+        } else if (change >= 0) {
+            changeText.className = 'fw-bold text-success';
+            changeText.innerText = 'Rp ' + change.toLocaleString('id-ID');
+        } else {
+            changeText.className = 'fw-bold text-danger';
+            changeText.innerText = 'Uang kurang (Rp ' + Math.abs(change).toLocaleString('id-ID') + ')';
+        }
+    }
+
+    function validatePayment() {
+        const method = document.getElementById('payment_method').value;
+        const cash = parseFloat(document.getElementById('cash_amount').value) || 0;
+
+        if (method === 'CASH' && cash < totalPay) {
+            alert('Nominal pembayaran kurang dari total tagihan!');
+            return false;
+        }
+
+        return confirm('Yakin ingin checkout transaksi ini?');
+    }
+</script>
+
 @endsection

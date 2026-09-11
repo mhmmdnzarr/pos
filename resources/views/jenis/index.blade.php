@@ -24,9 +24,11 @@
                     <h4 class="fw-bold text-dark mb-1">Daftar Jenis</h4>
                     <p class="text-muted small mb-0">Tambah Jenis Produk Untuk Menambahkan Produk.</p>
                 </div>
+                @if (Auth::user()->role->name === 'admin')
                 <div>
                     <a href="{{ route('jenis.create') }}" class="btn btn-primary px-4 fw-medium">Tambah Jenis</a>
                 </div>
+                @endif
             </div>
         </div>
 

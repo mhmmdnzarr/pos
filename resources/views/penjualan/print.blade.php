@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <title>Struk Penjualan #{{ $sale->id }}</title>
     <style>
-        body { font-family: monospace; width: 300px; margin: auto; padding: 10px; }
+        body { 
+            font-family: monospace; 
+            width: 300px; 
+            margin: auto; 
+            padding: 10px; 
+        }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
-        .line { border-top: 1px dashed #000; margin: 10px 0; }
+        .line { border-top: 1px dashed #000; margin: 8px 0; }
         table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 4px 0; }
+        td, th { padding: 2px 0; font-size: 13px; }
     </style>
 </head>
 <body onload="window.print()">
     <div class="text-center">
-        <h2>STRUK PENJUALAN</h2>
-        <p>No. Transaksi: #{{ $sale->id }}</p>
-        <p>Tanggal: {{ $sale->created_at->format('d/m/Y H:i') }}</p>
+        <h2 style="margin-bottom: 5px;">PINALLES OUTDOOR</h2>
+        <p style="margin: 0;">No. Transaksi: #{{ $sale->id }}</p>
+        <p style="margin: 0;">Tanggal: {{ $sale->created_at->format('d/m/Y H:i') }}</p>
     </div>
 
     <div class="line"></div>
@@ -42,11 +47,26 @@
         </tr>
         <tr>
             <td>Metode Bayar:</td>
-            <td class="text-right">{{ $sale->payment_method ?? '-' }}</td>
+            <td class="text-right">{{ $sale->metode_pembayaran ?? $sale->payment_method ?? 'CASH' }}</td>
         </tr>
+        
+        {{-- Tampilkan Bayar & Kembalian jika metode pembayaran CASH --}}
+        @if(($sale->metode_pembayaran ?? $sale->payment_method) === 'CASH')
+        <tr>
+            <td>Bayar (Tunai):</td>
+            <td class="text-right">Rp {{ number_format($sale->cash_amount ?? 0, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td>Kembalian:</td>
+            <td class="text-right">Rp {{ number_format($sale->kembalian ?? 0, 0, ',', '.') }}</td>
+        </tr>
+        @endif
     </table>
 
     <div class="line"></div>
-    <p class="text-center">Terima Kasih!</p>
+    <div class="text-center">
+        <p style="margin: 5px 0;">Terima Kasih!</p>
+        <small>Ready for Adventure</small>
+    </div>
 </body>
 </html>
