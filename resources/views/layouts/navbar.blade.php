@@ -15,7 +15,7 @@
         </li>
         @if (Auth::user()->role->name === 'admin')
         <li class="nav-item">
-          <a class="nav-link px-3 {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
+          <a class="nav-link px-3 {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users') }}">Pengguna</a>
         </li>
         @endif
         <li class="nav-item">
