@@ -34,7 +34,8 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {  
+
         $roles = Role::all();
 
         return view('users.create', compact('roles'));

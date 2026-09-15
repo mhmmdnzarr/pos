@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark first">
   <div class="container-fluid px-4">
     <a class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
-      <i class="bi bi-shop"></i> POS
+      <i class="bi bi-shop"></i> Pinalles Outdoor Pos
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,7 +10,6 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
-        <li class="nav-item">
           <a class="nav-link px-3 {{ Request::is('dashboard') ? 'active' : '' }}" aria-current="page" href="{{ route('dashboard') }}">Dashboard</a>
         </li>
         @if (Auth::user()->role->name === 'admin')
@@ -27,6 +26,10 @@
         <li class="nav-item">
           <a class="nav-link px-3 {{ Request::is('penjualan') ? 'active' : '' }}" href="{{ route('penjualan.index') }}">Penjualan</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {{ Request::is('tentang') ? 'active' : '' }}" aria-current="page" href="{{ route('tentang') }}">Tentang</a>
+        </li>
+        <li class="nav-item">
       </ul>
 
       <form action="{{ route('logout') }}" method="POST" class="d-flex mt-2 mt-lg-0">

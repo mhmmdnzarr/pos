@@ -109,52 +109,60 @@ class PenjualanController extends Controller
      * Update the specified resource in storage (Checkout Process).
      */
     public function update(Request $request, Penjualan $penjualan)
-{
-    $request->validate([
-        'payment_method' => 'required|in:CASH,QRIS',
-        'cash_amount'    => 'nullable|numeric|min:' . $penjualan->total_pembayaran,
-    ]);
+    {
+        $request->validate([
+            'payment_method' => 'required|in:CASH,QRIS',
+            'cash_amount'    => 'nullable|numeric|min:' . $penjualan->total_pembayaran,
+        ]);
 
-    if ($penjualan->status !== 'OPEN') {
-        return back()->with('error', 'Transaksi sudah diproses.');
-    }
-
-    if ($penjualan->itemPenjualan()->count() === 0) {
-        return back()->with('error', 'Keranjang belanja masih kosong.');
-    }
-
-    DB::transaction(function () use ($penjualan, $request) {
-
-        // 1. Potong stok produk
-        foreach ($penjualan->itemPenjualan as $item) {
-            if ($item->produk->stok < $item->kuantitas) {
-                throw new \Exception("Stok untuk produk '{$item->produk->nama}' tidak mencukupi.");
-            }
-
-            $item->produk->decrement('stok', $item->kuantitas);
+        if ($penjualan->status !== 'OPEN') {
+            return back()->with('error', 'Transaksi sudah diproses.');
         }
 
-        // 2. Hitung ulang total
-        $total = $penjualan->itemPenjualan()->sum('subtotal');
+        if ($penjualan->itemPenjualan()->count() === 0) {
+            return back()->with('error', 'Keranjang belanja masih kosong.');
+        }
 
-        // 3. Hitung nominal tunai dan kembalian
-        $cashAmount = $request->payment_method === 'CASH' ? ($request->cash_amount ?? 0) : $total;
-        $kembalian  = $request->payment_method === 'CASH' ? ($cashAmount - $total) : 0;
+        try {
+            DB::transaction(function () use ($penjualan, $request) {
 
-        // 4. Update data penjualan ke database
-        $penjualan->update([
-            'metode_pembayaran' => $request->payment_method,
-            'total_pembayaran'  => $total,
-            'cash_amount'       => $cashAmount, // <-- TANGKAP INPUTAN UANG
-            'kembalian'         => $kembalian,  // <-- SIMPAN KEMBALIAN
-            'status'            => 'COMPLETED',
-        ]);
-    });
+                // 1. Potong stok produk (Ambil stok terbaru langsung dari DB)
+                foreach ($penjualan->itemPenjualan as $item) {
+                    $produk = Produk::where('id', $item->produk_id)->lockForUpdate()->first();
 
-    return redirect()
-        ->route('penjualan.index')
-        ->with('success', 'Transaksi berhasil diselesaikan.');
-}
+                    if (!$produk || $produk->stok < $item->kuantitas) {
+                        $namaProduk = $produk ? $produk->nama : 'Produk';
+                        $stokAda = $produk ? $produk->stok : 0;
+                        throw new \Exception("Stok untuk produk '{$namaProduk}' tidak mencukupi (Tersedia: {$stokAda}).");
+                    }
+
+                    $produk->decrement('stok', $item->kuantitas);
+                }
+
+                // 2. Hitung ulang total
+                $total = $penjualan->itemPenjualan()->sum('subtotal');
+
+                // 3. Hitung nominal tunai dan kembalian
+                $cashAmount = $request->payment_method === 'CASH' ? ($request->cash_amount ?? 0) : $total;
+                $kembalian  = $request->payment_method === 'CASH' ? ($cashAmount - $total) : 0;
+
+                // 4. Update data penjualan ke database
+                $penjualan->update([
+                    'metode_pembayaran' => $request->payment_method,
+                    'total_pembayaran'  => $total,
+                    'cash_amount'       => $cashAmount, // <-- TANGKAP INPUTAN UANG
+                    'kembalian'         => $kembalian,  // <-- SIMPAN KEMBALIAN
+                    'status'            => 'COMPLETED',
+                ]);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()
+            ->route('penjualan.index')
+            ->with('success', 'Transaksi berhasil diselesaikan.');
+    }
 
     /**
      * Remove the specified resource from storage (Batal Transaksi).

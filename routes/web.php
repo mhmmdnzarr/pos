@@ -8,6 +8,8 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ItemPenjualanController;
 use App\Http\Controllers\JenisController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\TentangController;
 
 //Route yang bisa diakses ketika user belum login
 Route::middleware('guest')->group(function () {
@@ -18,6 +20,8 @@ Route::middleware('guest')->group(function () {
 //Route yang bisa di akses ketika user sudah login
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/about', [AboutController::class, 'index'])->name('about');
+    Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('role:admin')->name('admin.')->group(function () {
@@ -25,7 +29,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/edit{user}', [UserController::class, 'edit'])->name('users.edit');
-        Route::post('/users/update/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::put('/users/update/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
     //produk
