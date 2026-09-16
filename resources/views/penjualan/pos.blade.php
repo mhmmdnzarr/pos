@@ -162,7 +162,7 @@
     <p class="small text-muted mb-2 fw-semibold">Scan QRIS untuk Pembayaran</p>
     
     {{-- Gambar QRIS Kamu --}}
-    <img src="{{ asset('images/qris.png') }}" 
+    <img src="{{ asset('images/qriss.jpg') }}" 
          alt="QRIS Pinalles Outdoor" 
          class="img-fluid rounded border p-2 bg-white" 
          style="max-width: 220px;">

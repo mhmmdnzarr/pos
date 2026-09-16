@@ -98,7 +98,7 @@ class PenjualanController extends Controller
 
         $sale = $penjualan;
         $sale->load('itemPenjualan.produk');
-        
+
         $products = Produk::orderBy('nama')->get();
         $mode = 'edit';
 
@@ -115,10 +115,6 @@ class PenjualanController extends Controller
             'cash_amount'    => 'nullable|numeric|min:' . $penjualan->total_pembayaran,
         ]);
 
-        if ($penjualan->status !== 'OPEN') {
-            return back()->with('error', 'Transaksi sudah diproses.');
-        }
-
         if ($penjualan->itemPenjualan()->count() === 0) {
             return back()->with('error', 'Keranjang belanja masih kosong.');
         }
@@ -126,7 +122,22 @@ class PenjualanController extends Controller
         try {
             DB::transaction(function () use ($penjualan, $request) {
 
-                // 1. Potong stok produk (Ambil stok terbaru langsung dari DB)
+                // 🛠️ PERBAIKAN: kunci row Penjualan ini & baca ULANG statusnya
+                // dari DB (bukan dari objek $penjualan yang mungkin sudah "basi").
+                // Ini mencegah stok terpotong dobel kalau tombol bayar
+                // ter-klik lebih dari sekali / request-nya nyangkut lalu retry:
+                // request kedua akan menunggu lock ini, lalu melihat status
+                // sudah COMPLETED dan berhenti SEBELUM sempat memotong stok lagi.
+                $penjualan = Penjualan::where('id', $penjualan->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if ($penjualan->status !== 'OPEN') {
+                    throw new \Exception('Transaksi sudah diproses.');
+                }
+
+                // 1. Potong stok produk (satu-satunya tempat stok dipotong,
+                //    lihat juga catatan di ItemPenjualanController@store)
                 foreach ($penjualan->itemPenjualan as $item) {
                     $produk = Produk::where('id', $item->produk_id)->lockForUpdate()->first();
 
@@ -179,6 +190,9 @@ class PenjualanController extends Controller
 
         DB::transaction(function () use ($penjualan) {
             // Hapus item-item dalam keranjang
+            // (Catatan: stok TIDAK perlu dikembalikan di sini karena
+            // stok belum pernah dipotong untuk transaksi yang masih OPEN
+            // — lihat ItemPenjualanController@store)
             $penjualan->itemPenjualan()->delete();
 
             // Hapus data transaksi utama
