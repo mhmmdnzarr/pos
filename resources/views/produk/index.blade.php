@@ -97,7 +97,7 @@
                                     <span class="badge bg-success-subtle text-success border border-success-subtle">Stok:
                                         {{ $product->stok }}</span>
                                 @elseif($product->stok > 0)
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Stok:
+                                    <span class="badge bg-danger-subtle text-black border border-danger-subtle">Stok:
                                         {{ $product->stok }}</span>
                                 @else
                                     <span

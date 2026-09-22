@@ -61,7 +61,9 @@
                     <tr>
                         <th scope="col" class="ps-4" style="width: 10%;">No</th>
                         <th scope="col" style="width: 70%;">Nama Jenis</th>
+                        @if (Auth::user()->role->name === 'admin')
                         <th scope="col" class="text-center pe-4" style="width: 20%;">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>

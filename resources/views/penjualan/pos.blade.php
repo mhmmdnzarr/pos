@@ -125,7 +125,7 @@
                             <span class="fs-5 fw-bold">Rp {{ number_format($sale->total_pembayaran) }}</span>
                         </div>
 
-                        {{-- FORM CHECKOUT DENGAN INTERAKSI CASH & QRIS --}}
+                        {{-- FORM CHECKOUT DENGAN INTERAKSI CASH, QRIS & TRANSFER --}}
                         <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" onsubmit="return validatePayment()">
                             @csrf
                             @method('PUT')
@@ -136,6 +136,7 @@
                                     <option value="">-- Pilih Pembayaran --</option>
                                     <option value="CASH">Cash</option>
                                     <option value="QRIS">QRIS</option>
+                                    <option value="TRANSFER">Transfer Bank</option>
                                 </select>
                             </div>
 
@@ -157,20 +158,41 @@
                                 </div>
                             </div>
 
-                           {{-- 2. Container QRIS (Muncul hanya saat milih QRIS) --}}
-<div id="qris-fields" class="d-none border rounded p-3 mb-3 bg-white shadow-sm text-center">
-    <p class="small text-muted mb-2 fw-semibold">Scan QRIS untuk Pembayaran</p>
-    
-    {{-- Gambar QRIS Kamu --}}
-    <img src="{{ asset('images/qriss.jpg') }}" 
-         alt="QRIS Pinalles Outdoor" 
-         class="img-fluid rounded border p-2 bg-white" 
-         style="max-width: 220px;">
+                            {{-- 2. Container QRIS (Muncul hanya saat milih QRIS) --}}
+                            <div id="qris-fields" class="d-none border rounded p-3 mb-3 bg-white shadow-sm text-center">
+                                <p class="small text-muted mb-2 fw-semibold">Scan QRIS untuk Pembayaran</p>
+                                
+                                <img src="{{ asset('images/qriss.jpg') }}" 
+                                    alt="QRIS Pinalles Outdoor" 
+                                    class="img-fluid rounded border p-2 bg-white" 
+                                    style="max-width: 220px;">
 
-    <small class="d-block text-muted mt-2" style="font-size: 0.75rem;">
-        Pastikan pembeli sudah transfer sebelum menekan Checkout.
-    </small>
-</div>
+                                <small class="d-block text-muted mt-2" style="font-size: 0.75rem;">
+                                    Pastikan pembeli sudah transfer sebelum menekan Checkout.
+                                </small>
+                            </div>
+
+                            {{-- 3. Container TRANSFER (Muncul hanya saat milih TRANSFER) --}}
+                            <div id="transfer-fields" class="d-none border rounded p-3 mb-3 bg-white shadow-sm">
+                                <p class="small text-muted mb-2 fw-semibold">Informasi Rekening Transfer</p>
+                                <div class="p-2 border rounded bg-light mb-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-muted">Bank:</span>
+                                        <span class="fw-bold text-dark">BCA</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-muted">No. Rekening:</span>
+                                        <span class="fw-bold text-dark">1234567890</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted">Atas Nama:</span>
+                                        <span class="fw-bold text-dark">Pinalles Outdoor</span>
+                                    </div>
+                                </div>
+                                <small class="d-block text-muted text-center" style="font-size: 0.75rem;">
+                                    Pastikan dana transfer sudah masuk ke rekening sebelum menyelesaikan transaksi.
+                                </small>
+                            </div>
 
                             <button type="submit" class="btn btn-success w-100 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                 Checkout
@@ -199,7 +221,7 @@
 
 </div>
 
-{{-- JAVASCRIPT UNTUK LOGIKA CASH & QRIS --}}
+
 <script>
     const totalPay = {{ $sale->total_pembayaran ?? 0 }};
 
@@ -207,25 +229,24 @@
         const method = document.getElementById('payment_method').value;
         const cashFields = document.getElementById('cash-fields');
         const qrisFields = document.getElementById('qris-fields');
+        const transferFields = document.getElementById('transfer-fields');
         const cashInput = document.getElementById('cash_amount');
+
+        cashFields.classList.add('d-none');
+        qrisFields.classList.add('d-none');
+        transferFields.classList.add('d-none');
+        cashInput.removeAttribute('required');
+        cashInput.value = '';
+        resetChangeText();
 
         if (method === 'CASH') {
             cashFields.classList.remove('d-none');
-            qrisFields.classList.add('d-none');
             cashInput.setAttribute('required', 'required');
             cashInput.focus();
         } else if (method === 'QRIS') {
             qrisFields.classList.remove('d-none');
-            cashFields.classList.add('d-none');
-            cashInput.removeAttribute('required');
-            cashInput.value = '';
-            resetChangeText();
-        } else {
-            cashFields.classList.add('d-none');
-            qrisFields.classList.add('d-none');
-            cashInput.removeAttribute('required');
-            cashInput.value = '';
-            resetChangeText();
+        } else if (method === 'TRANSFER') {
+            transferFields.classList.remove('d-none');
         }
     }
 

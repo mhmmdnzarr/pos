@@ -55,16 +55,6 @@ class ItemPenjualanController extends Controller
  
             $product = Produk::lockForUpdate()->findOrFail($request->product_id);
  
-            // Cek ketersediaan stok SAJA — stok TIDAK dipotong di sini.
-            // Stok baru benar-benar dipotong satu kali, saat checkout
-            // (lihat PenjualanController@update). Ini mencegah stok
-            // terpotong dua kali: sekali saat add-to-cart, sekali lagi
-            // saat bayar.
-            //
-            // Catatan: kuantitas yang dibandingkan adalah TOTAL kuantitas
-            // produk ini di keranjang (item lama + tambahan baru), bukan
-            // cuma quantity yang baru diinput, supaya user tidak bisa
-            // menambah produk yang sama berkali-kali melebihi stok yang ada.
             $existingItem = ItemPenjualan::where('penjualan_id', $sale->id)
                 ->where('produk_id', $product->id)
                 ->lockForUpdate()

@@ -24,7 +24,7 @@ class ProdukController extends Controller
                 $query->where('nama', 'like', '%' . $keyword . '%');
             })
             ->latest()
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
 
         return view('produk.index', compact('products'));

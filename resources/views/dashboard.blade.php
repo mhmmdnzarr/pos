@@ -35,7 +35,7 @@
                     Total Nilai Penjualan Hari ini
                 </div>
                 <div class="card-body">
-                    <h3 class="card-title fw-bold mb-0">Rp {{ number_format($ringkasan['total_penjualan']) }}</h3>
+                    <h3 class="card-title fw-bold mb-0 text-success">Rp {{ number_format($ringkasan['total_penjualan']) }}</h3>
                 </div>
             </div>
         </div> -->
@@ -48,9 +48,9 @@
                             <span class="fw-bold border-0 pt-3 pb-0 text-muted fs-7 text-uppercase">
                                 Total Nilai Penjualan Hari Ini
                             </span>
-                            <h3 class="fw-bold text-dark mb-0">Rp {{ number_format($ringkasan['total_penjualan']) }}</h3>
+                            <h3 class="fw-bold text-success mb-0 ">Rp {{ number_format($ringkasan['total_penjualan']) }}</h3>
                         </div>
-                        <div class="icon-shape bg-opacity-10 text-primary fs-4">
+                        <div class="icon-shape bg-opacity-10 text-success fs-4">
                             <i class="bi bi-cash-stack"></i>
                         </div>
                     </div>
@@ -106,9 +106,9 @@
                             <span class="fw-bold border-0 pt-3 pb-0 text-muted fs-7 text-uppercase">
                                 Total Pembayaran Non-Tunai
                             </span>
-                            <h3 class="fw-bold text-dark mb-0">Rp {{ number_format($ringkasan['total_non_tunai']) }}</h3>
+                            <h3 class="fw-bold text-success mb-0">Rp {{ number_format($ringkasan['total_non_tunai']) }}</h3>
                         </div>
-                        <div class="icon-shape bg-opacity-10 text-primary fs-4">
+                        <div class="icon-shape bg-opacity-10 text-success fs-4">
                             <i class="bi bi-credit-card"></i>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                                     <td>{{ $produkStokRendah->firstItem() + $index }}</td>
                                     <td class="fw-semibold">{{ $produk->nama }}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 fw-bold">
+                                        <span class="badge bg-danger bg-opacity-10 text-black px-3 py-2 fw-bold">
                                             {{ $produk->stok }}
                                         </span>
                                     </td>
@@ -212,6 +212,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
+                            <th scope="col" class="ps-3 text-center" style="width: 50px;">No</th>
                             <th scope="col" class="ps-3">Nama</th>
                             <th scope="col" class="text-center">Stok</th>
                             <th scope="col" class="text-center">Unit Terjual</th>
@@ -220,6 +221,7 @@
                     <tbody>
                         @forelse ($produkTerlaris as $produk)
                         <tr>
+                            <td class="text-center ps-3">{{ $loop->iteration }}</td>
                             <td class="fw-bold ps-3">{{ $produk->nama }}</td>
                             <td class="text-center">
                                 <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
@@ -234,7 +236,8 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="text-muted text-center py-3">
+                            <!-- 2. Mengubah colspan menjadi 4 agar mencakup seluruh kolom -->
+                            <td colspan="4" class="text-muted text-center py-3">
                                 Seluruh produk berada dalam kondisi stok aman.
                             </td>
                         </tr>

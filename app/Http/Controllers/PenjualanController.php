@@ -111,7 +111,7 @@ class PenjualanController extends Controller
     public function update(Request $request, Penjualan $penjualan)
     {
         $request->validate([
-            'payment_method' => 'required|in:CASH,QRIS',
+            'payment_method' => 'required|in:CASH,QRIS,TRANSFER',
             'cash_amount'    => 'nullable|numeric|min:' . $penjualan->total_pembayaran,
         ]);
 
@@ -122,12 +122,6 @@ class PenjualanController extends Controller
         try {
             DB::transaction(function () use ($penjualan, $request) {
 
-                // 🛠️ PERBAIKAN: kunci row Penjualan ini & baca ULANG statusnya
-                // dari DB (bukan dari objek $penjualan yang mungkin sudah "basi").
-                // Ini mencegah stok terpotong dobel kalau tombol bayar
-                // ter-klik lebih dari sekali / request-nya nyangkut lalu retry:
-                // request kedua akan menunggu lock ini, lalu melihat status
-                // sudah COMPLETED dan berhenti SEBELUM sempat memotong stok lagi.
                 $penjualan = Penjualan::where('id', $penjualan->id)
                     ->lockForUpdate()
                     ->firstOrFail();
@@ -135,9 +129,6 @@ class PenjualanController extends Controller
                 if ($penjualan->status !== 'OPEN') {
                     throw new \Exception('Transaksi sudah diproses.');
                 }
-
-                // 1. Potong stok produk (satu-satunya tempat stok dipotong,
-                //    lihat juga catatan di ItemPenjualanController@store)
                 foreach ($penjualan->itemPenjualan as $item) {
                     $produk = Produk::where('id', $item->produk_id)->lockForUpdate()->first();
 
@@ -161,8 +152,8 @@ class PenjualanController extends Controller
                 $penjualan->update([
                     'metode_pembayaran' => $request->payment_method,
                     'total_pembayaran'  => $total,
-                    'cash_amount'       => $cashAmount, // <-- TANGKAP INPUTAN UANG
-                    'kembalian'         => $kembalian,  // <-- SIMPAN KEMBALIAN
+                    'cash_amount'       => $cashAmount,
+                    'kembalian'         => $kembalian,  
                     'status'            => 'COMPLETED',
                 ]);
             });

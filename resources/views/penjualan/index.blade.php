@@ -67,7 +67,7 @@
                                     {{ $sales->firstItem() + $loop->index }}</th>
                                 <td>{{ $sale->created_at->translatedFormat('d-m-Y H:i:s') }}</td>
                                 <td>{{ $sale->user->name }}</td>
-                                <td class="fw-semibold">Rp. {{ number_format($sale->total_pembayaran) }}</td>
+                                <td class="fw-semibold text-success">Rp. {{ number_format($sale->total_pembayaran) }}</td>
                                 <td>
                                     <span class="badge bg-light text-dark border fw-medium px-2 py-1">
                                         {{ $sale->metode_pembayaran ?? '-' }}
